@@ -5,14 +5,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import NoteModal from './NoteModal';
+import NoteModal from './AddEditNoteModal';
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../util/validators'
 import Input from '../util/Input';
 import { useForm } from '../hooks/FormHook';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
-    const [formState, inputHandler, setFormData] = useForm({
+    const [formState, inputHandler] = useForm({
         heading: {
             value: '',
             isValid: false
