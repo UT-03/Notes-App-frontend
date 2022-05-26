@@ -5,6 +5,7 @@ import Note from './Note';
 import { useForm } from '../hooks/FormHook';
 import NoteFormModal from './NoteFormModal';
 import WarningModal from './WarningModal';
+import NoteBodyModal from './NoteBodyModal';
 
 const DUMMY_NOTES = [
     {
@@ -24,9 +25,10 @@ const DUMMY_NOTES = [
     },
 ]
 
-const Notes = (props) => {
+const Notes = () => {
     const [showModal, setShowModal] = useState(false);
     const [showWarningModal, setShowWarningModal] = useState(false);
+    const [showNoteBodyModal, setShowNoteBodyModal] = useState(false);
     const [data, setData] = useState();
 
     const [formState, inputHandler, setFormData] = useForm({
@@ -78,6 +80,12 @@ const Notes = (props) => {
         console.log("Note deleted");
     }
 
+    const showNoteBodyHandler = (data) => {
+        console.log(data);
+        setData(data);
+        setShowNoteBodyModal(true);
+    }
+
     return (
         <React.Fragment>
             <Container fluid="sm" className="mt-3">
@@ -86,7 +94,8 @@ const Notes = (props) => {
                         note={note}
                         key={index}
                         onEditNoteClick={editNoteModalHandler}
-                        onDeleteNoteClick={deleteNoteWarningModalHandler} />
+                        onDeleteNoteClick={deleteNoteWarningModalHandler}
+                        showNoteBodyHandler={showNoteBodyHandler} />
                 })}
             </Container>
             <NoteFormModal
@@ -106,6 +115,13 @@ const Notes = (props) => {
                 warningMessage="Are you sure you want to delete the note?"
                 warningAssentButtonLabel="Delete"
                 warningAssentHandler={deleteNoteHandler} />
+
+            {showNoteBodyModal && data && (
+                <NoteBodyModal
+                    show={showNoteBodyModal}
+                    onHide={() => setShowNoteBodyModal(false)}
+                    data={data} />
+            )}
         </React.Fragment>
     );
 };

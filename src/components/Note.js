@@ -9,8 +9,13 @@ import deleteNoteImage from '../assets/images/deleteNote.svg';
 
 const Note = (props) => {
     return (
-        <Row className="border rounded p-3 my-2" style={{ cursor: "pointer", userSelect: "none" }}>
-            <Col xs={9} sm={10} lg={11}>
+        <Row
+            className="border rounded p-3 my-2"
+            style={{ userSelect: "none" }}
+        >
+            <Col xs={9} sm={10} lg={11}
+                style={{ cursor: "pointer" }}
+                onClick={() => props.showNoteBodyHandler(props.note)}>
                 <Row>{props.note.heading}</Row>
                 <div>
                     {props.note.tags.map((tag, index) => <Badge bg="primary" className="mx-1" key={index}>{tag}</Badge>)}
@@ -20,6 +25,7 @@ const Note = (props) => {
                 <Image
                     src={editNoteImage}
                     style={{
+                        cursor: "pointer",
                         height: "1.75rem",
                         filter: "invert(30%) sepia(99%) saturate(1447%) hue-rotate(203deg) brightness(97%) contrast(113%)"
                     }}
@@ -31,6 +37,7 @@ const Note = (props) => {
                 <Image
                     src={deleteNoteImage}
                     style={{
+                        cursor: "pointer",
                         height: "1.75rem",
                         filter: "invert(30%) sepia(63%) saturate(3077%) hue-rotate(336deg) brightness(89%) contrast(92%)"
                     }}
