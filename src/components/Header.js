@@ -49,7 +49,7 @@ const Header = () => {
                         <Form className="d-flex ms-auto my-2">
                             <FormControl
                                 type="search"
-                                placeholder="Search"
+                                placeholder="Search tags"
                                 className="me-2"
                                 aria-label="Search"
                             />
