@@ -9,7 +9,7 @@ import deleteNoteImage from '../assets/images/deleteNote.svg';
 
 const Note = (props) => {
     return (
-        <Row className="border rounded p-3 my-2" style={{ cursor: "pointer" }}>
+        <Row className="border rounded p-3 my-2" style={{ cursor: "pointer", userSelect: "none" }}>
             <Col xs={9} sm={10} lg={11}>
                 <Row>{props.note.heading}</Row>
                 <div>
@@ -33,7 +33,8 @@ const Note = (props) => {
                     style={{
                         height: "1.75rem",
                         filter: "invert(30%) sepia(63%) saturate(3077%) hue-rotate(336deg) brightness(89%) contrast(92%)"
-                    }} />
+                    }}
+                    onClick={() => props.onDeleteNoteClick()} />
             </Col>
         </Row>
     );

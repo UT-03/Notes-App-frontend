@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 import NoteFormModal from './NoteFormModal';
+import WarningModal from './WarningModal';
 import { useForm } from '../hooks/FormHook';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
+    const [showLogoutWarningModal, setShowLogoutWarningModal] = useState(false);
+
+    const navigate = useNavigate();
 
     const [formState, inputHandler] = useForm({
         heading: {
@@ -31,6 +35,10 @@ const Header = () => {
 
         console.log(data);
     }
+
+    const logoutHandler = () => {
+        navigate('/auth');
+    }
     return (
         <React.Fragment>
             <Navbar bg="light" expand="lg">
@@ -47,7 +55,7 @@ const Header = () => {
                             />
                         </Form>
                         <Button type='button' variant="primary" className="m-2" onClick={() => setShowModal(true)}>Add Note</Button>
-                        <Button type='button' variant="danger" className="m-2"><Link to="/auth" className='text-decoration-none text-white'>Logout</Link></Button>
+                        <Button type='button' variant="danger" className="m-2" onClick={() => setShowLogoutWarningModal(true)}>Logout</Button>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
@@ -60,6 +68,13 @@ const Header = () => {
                 inputHandler={inputHandler}
                 buttonLabel="Add Note"
             />
+            <WarningModal
+                show={showLogoutWarningModal}
+                onHide={() => setShowLogoutWarningModal(false)}
+                heading="Logout?"
+                warningMessage="Are you sure you want to logout?"
+                warningAssentButtonLabel="Logout"
+                warningAssentHandler={logoutHandler} />
         </React.Fragment>
     );
 };

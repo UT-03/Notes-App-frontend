@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Note from './Note';
 import { useForm } from '../hooks/FormHook';
 import NoteFormModal from './NoteFormModal';
+import WarningModal from './WarningModal';
 
 const DUMMY_NOTES = [
     {
@@ -25,6 +26,7 @@ const DUMMY_NOTES = [
 
 const Notes = (props) => {
     const [showModal, setShowModal] = useState(false);
+    const [showWarningModal, setShowWarningModal] = useState(false);
     const [data, setData] = useState();
 
     const [formState, inputHandler, setFormData] = useForm({
@@ -67,11 +69,24 @@ const Notes = (props) => {
         console.log(data);
     }
 
+    const deleteNoteWarningModalHandler = () => {
+        setShowWarningModal(true);
+    }
+
+    const deleteNoteHandler = () => {
+        setShowWarningModal(false);
+        console.log("Note deleted");
+    }
+
     return (
         <React.Fragment>
             <Container fluid="sm" className="mt-3">
                 {DUMMY_NOTES.map((note, index) => {
-                    return <Note note={note} key={index} onEditNoteClick={editNoteModalHandler} />
+                    return <Note
+                        note={note}
+                        key={index}
+                        onEditNoteClick={editNoteModalHandler}
+                        onDeleteNoteClick={deleteNoteWarningModalHandler} />
                 })}
             </Container>
             <NoteFormModal
@@ -84,6 +99,13 @@ const Notes = (props) => {
                 data={data}
                 buttonLabel="Edit Note"
             />
+            <WarningModal
+                show={showWarningModal}
+                onHide={() => setShowWarningModal(false)}
+                heading="Delete Note?"
+                warningMessage="Are you sure you want to delete the note?"
+                warningAssentButtonLabel="Delete"
+                warningAssentHandler={deleteNoteHandler} />
         </React.Fragment>
     );
 };
