@@ -1,12 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Badge from 'react-bootstrap/Badge';
-import Image from 'react-bootstrap/Image';
 
-import editNoteImage from '../assets/images/editNote.svg';
-import deleteNoteImage from '../assets/images/deleteNote.svg';
+import Note from './Note';
+import { useForm } from '../hooks/FormHook';
+import NoteFormModal from './NoteFormModal';
 
 const DUMMY_NOTES = [
     {
@@ -27,26 +24,67 @@ const DUMMY_NOTES = [
 ]
 
 const Notes = (props) => {
+    const [showModal, setShowModal] = useState(false);
+    const [data, setData] = useState();
+
+    const [formState, inputHandler, setFormData] = useForm({
+        heading: {
+            value: '',
+            isValid: false
+        },
+        tags: {
+            value: '',
+            isValid: false
+        },
+        body: {
+            value: '',
+            isValid: false
+        }
+    }, false);
+
+    const editNoteModalHandler = (data) => {
+        setData(data);
+        setFormData({
+            heading: {
+                value: data.heading,
+                isValid: true
+            },
+            tags: {
+                value: data.tags,
+                isValid: true
+            },
+            body: {
+                value: data.body,
+                isValid: true
+            }
+        }, true)
+
+        setShowModal(true);
+    }
+
+    const editNoteHandler = async (event, data) => {
+        event.preventDefault();
+        console.log(data);
+    }
 
     return (
-        <Container fluid="sm" className="mt-3">
-            {DUMMY_NOTES.map((note, index) => {
-                return (
-                    <Row className="border rounded p-3 my-2" style={{ cursor: "pointer" }} key={index}>
-                        <Col xs={9} sm={10} lg={11}>
-                            <Row>{note.heading}</Row>
-                            <div>
-                                {note.tags.map((tag, index) => <Badge bg="primary" className="mx-1" key={index}>{tag}</Badge>)}
-                            </div>
-                        </Col>
-                        <Col xs={3} sm={2} lg={1} className=" p-0 d-flex flex-row align-items-center flex-wrap justify-content-evenly">
-                            <Image src={editNoteImage} style={{ height: "1.75rem", filter: "invert(30%) sepia(99%) saturate(1447%) hue-rotate(203deg) brightness(97%) contrast(113%)" }} />
-                            <Image src={deleteNoteImage} style={{ height: "1.75rem", filter: "invert(30%) sepia(63%) saturate(3077%) hue-rotate(336deg) brightness(89%) contrast(92%)" }} />
-                        </Col>
-                    </Row>
-                )
-            })}
-        </Container>
+        <React.Fragment>
+            <Container fluid="sm" className="mt-3">
+                {DUMMY_NOTES.map((note, index) => {
+                    return <Note note={note} key={index} onEditNoteClick={editNoteModalHandler} />
+                })}
+            </Container>
+            <NoteFormModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                submitHandler={editNoteHandler}
+                title="Edit Note"
+                formState={formState}
+                inputHandler={inputHandler}
+                data={data}
+                buttonLabel="Edit Note"
+            />
+        </React.Fragment>
     );
 };
 

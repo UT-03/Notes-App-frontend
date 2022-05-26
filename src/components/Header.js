@@ -5,13 +5,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-import NoteModal from './AddEditNoteModal';
-import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../util/validators'
-import Input from '../util/Input';
+import NoteFormModal from './NoteFormModal';
 import { useForm } from '../hooks/FormHook';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
+
     const [formState, inputHandler] = useForm({
         heading: {
             value: '',
@@ -27,13 +26,8 @@ const Header = () => {
         }
     }, false);
 
-    const newNoteHandler = async event => {
+    const newNoteHandler = async (event, data) => {
         event.preventDefault();
-        const data = {
-            heading: formState.inputs.heading.value,
-            tags: formState.inputs.tags.value,
-            body: formState.inputs.body.value
-        }
 
         console.log(data);
     }
@@ -57,41 +51,15 @@ const Header = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <NoteModal show={showModal} onHide={() => setShowModal(false)} title="Add Note">
-                <Form onSubmit={newNoteHandler}>
-                    <Input
-                        element="input"
-                        id="heading"
-                        type="text"
-                        label="Heading"
-                        validators={[VALIDATOR_REQUIRE()]}
-                        errorText="Please enter a valid Heading!"
-                        onInput={inputHandler}
-                    />
-                    <Input
-                        element="input"
-                        id="tags"
-                        type="text"
-                        label="Tags"
-                        validators={[VALIDATOR_REQUIRE()]}
-                        errorText="Please enter valid Tags!"
-                        onInput={inputHandler}
-                    />
-                    <Input
-                        id="body"
-                        type="text"
-                        label="Body"
-                        rows={10}
-                        validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(10)]}
-                        errorText="Body must have minimum length of 10 characters!"
-                        onInput={inputHandler}
-                    />
-                    <Button
-                        type='submit'
-                        variant='primary'
-                        disabled={!formState.isValid}>Add Note</Button>
-                </Form>
-            </NoteModal>
+            <NoteFormModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                submitHandler={newNoteHandler}
+                title="Add Note"
+                formState={formState}
+                inputHandler={inputHandler}
+                buttonLabel="Add Note"
+            />
         </React.Fragment>
     );
 };
