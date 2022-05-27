@@ -1,10 +1,13 @@
 import React from 'react';
 import { Routes, Route } from "react-router-dom";
+// import dotEnv from 'dotenv';
 
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import { useAuth } from './hooks/AuthHook';
 import { AuthContext } from './util/authContext';
+
+// dotEnv.config();
 
 const App = () => {
   const { token, login, logout } = useAuth();
@@ -20,7 +23,9 @@ const App = () => {
   }
   else {
     routes = (
-      <Route path="/" element={<Auth />} />
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+      </Routes>
     )
   }
   return (

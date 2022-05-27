@@ -1,33 +1,77 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import AuthForm from '../components/AuthForm';
+import { AuthContext } from '../util/authContext';
+import { useHttpClient } from '../hooks/HttpHook';
+import { useNavigate } from 'react-router-dom';
+import ErrorModal from '../components/ErrorModal';
 
+const Auth = () => {
+    const auth = useContext(AuthContext);
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+    const navigate = useNavigate();
 
-const Auth = (props) => {
-    const submitHandler = (e, data, isLoginMode) => {
+    const submitHandler = async (e, data, isLoginMode) => {
         e.preventDefault();
-        console.log(data)
-        console.log(isLoginMode)
+        let responseData;
+        if (isLoginMode) {
+            try {
+                responseData = await sendRequest(
+                    `${process.env.REACT_APP_HOSTNAME}/api/user/login`,
+                    'POST',
+                    JSON.stringify({
+                        username: data.username,
+                        password: data.password
+                    }),
+                    {
+                        'Content-Type': 'application/json'
+                    }
+                );
+            }
+            catch (err) {
+                console.log(err);
+            }
+        } else {
+            try {
+                responseData = await sendRequest(
+                    `${process.env.REACT_APP_HOSTNAME}/api/user/signup`,
+                    'POST',
+                    JSON.stringify({
+                        username: data.username,
+                        password: data.password
+                    }),
+                    {
+                        'Content-Type': 'application/json'
+                    }
+                );
+            }
+            catch (err) {
+                console.log(err);
+            }
+
+        }
+        auth.login(responseData.token);
+        navigate('/');
     }
 
     return (
-        <Container className="d-flex justify-content-center mt-5">
-            <Card
-                style={{ width: '18rem' }}
-                className="my-auto"
-            >
-                <Card.Body>
-                    <Card.Title>Login Required</Card.Title>
-                    {/* <Card.Text>
-      Some quick example text to build on the card title and make up the bulk of
-      the card's content.
-    </Card.Text> */}
-                    <AuthForm
-                        onSubmit={submitHandler} />
-                </Card.Body>
-            </Card>
-        </Container>
+        <React.Fragment>
+            <ErrorModal error={error} onHide={clearError} show={!!error} />
+            <Container className="d-flex justify-content-center mt-5">
+                <Card
+                    style={{ width: '18rem' }}
+                    className="my-auto"
+                >
+                    <Card.Body>
+                        <Card.Title>Login Required</Card.Title>
+                        <AuthForm
+                            isLoading={isLoading}
+                            onSubmit={submitHandler} />
+                    </Card.Body>
+                </Card>
+            </Container>
+        </React.Fragment>
     );
 };
 

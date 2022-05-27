@@ -8,11 +8,14 @@ import Button from 'react-bootstrap/Button';
 import NoteFormModal from './NoteFormModal';
 import WarningModal from './WarningModal';
 import { useForm } from '../hooks/FormHook';
+import { useAuth } from '../hooks/AuthHook';
+import { AuthContext } from '../util/authContext';
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
     const [showLogoutWarningModal, setShowLogoutWarningModal] = useState(false);
 
+    const auth = useAuth(AuthContext);
     const navigate = useNavigate();
 
     const [formState, inputHandler] = useForm({
@@ -37,6 +40,7 @@ const Header = () => {
     }
 
     const logoutHandler = () => {
+        auth.logout();
         navigate('/auth');
     }
     return (
