@@ -5,8 +5,6 @@ import AuthForm from '../components/AuthForm';
 
 
 const Auth = (props) => {
-
-
     const submitHandler = (e, data, isLoginMode) => {
         e.preventDefault();
         console.log(data)
