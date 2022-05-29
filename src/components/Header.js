@@ -10,13 +10,17 @@ import WarningModal from './WarningModal';
 import { useForm } from '../hooks/FormHook';
 import { useAuth } from '../hooks/AuthHook';
 import { AuthContext } from '../util/authContext';
+import { useHttpClient } from '../hooks/HttpHook';
+import ErrorModal from './ErrorModal';
 
-const Header = () => {
+const Header = props => {
     const [showModal, setShowModal] = useState(false);
     const [showLogoutWarningModal, setShowLogoutWarningModal] = useState(false);
 
     const auth = useAuth(AuthContext);
     const navigate = useNavigate();
+
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const [formState, inputHandler] = useForm({
         heading: {
@@ -36,7 +40,25 @@ const Header = () => {
     const newNoteHandler = async (event, data) => {
         event.preventDefault();
 
-        console.log(data);
+        return sendRequest(
+            `${process.env.REACT_APP_HOSTNAME}/api/notes/add-new-note`,
+            'POST',
+            JSON.stringify({
+                heading: data.heading,
+                tags: data.tags,
+                body: data.body
+            }),
+            {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + auth.token
+            }
+        )
+            .then(responseData => {
+                props.onNewNote(responseData);
+            })
+            .then(() => {
+                setShowModal(false);
+            });
     }
 
     const logoutHandler = () => {
@@ -71,6 +93,7 @@ const Header = () => {
                 formState={formState}
                 inputHandler={inputHandler}
                 buttonLabel="Add Note"
+                buttonDisable={isLoading}
             />
             <WarningModal
                 show={showLogoutWarningModal}
@@ -79,6 +102,10 @@ const Header = () => {
                 warningMessage="Are you sure you want to logout?"
                 warningAssentButtonLabel="Logout"
                 warningAssentHandler={logoutHandler} />
+            <ErrorModal
+                error={error}
+                show={!!error}
+                onHide={clearError} />
         </React.Fragment>
     );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../util/validators'
 import Input from '../util/Input';
@@ -65,7 +66,18 @@ const NoteFormModal = (props) => {
                     <Button
                         type='submit'
                         variant='primary'
-                        disabled={!props.formState.isValid}>{props.buttonLabel}</Button>
+                        disabled={!props.formState.isValid || props.buttonDisable}>
+                        {props.buttonDisable && (
+                            <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                            />
+                        )}
+                        {props.buttonLabel}
+                    </Button>
                 </Form>
             </Modal.Body>
         </Modal>
