@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
 const ErrorModal = (props) => {
-    console.log(props.error)
     return (
         <Modal
             {...props}

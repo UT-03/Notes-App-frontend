@@ -24,7 +24,7 @@ const App = () => {
   else {
     routes = (
       <Routes>
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/" element={<Auth />} />
       </Routes>
     )
   }
