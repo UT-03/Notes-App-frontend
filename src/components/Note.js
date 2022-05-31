@@ -30,6 +30,7 @@ const Note = (props) => {
                         filter: "invert(30%) sepia(99%) saturate(1447%) hue-rotate(203deg) brightness(97%) contrast(113%)"
                     }}
                     onClick={() => props.onEditNoteClick({
+                        id: props.note.id,
                         heading: props.note.heading,
                         tags: props.note.tags.join(", "),
                         body: props.note.body
@@ -41,7 +42,9 @@ const Note = (props) => {
                         height: "1.75rem",
                         filter: "invert(30%) sepia(63%) saturate(3077%) hue-rotate(336deg) brightness(89%) contrast(92%)"
                     }}
-                    onClick={() => props.onDeleteNoteClick()} />
+                    onClick={() => props.onDeleteNoteClick({
+                        id: props.note.id
+                    })} />
             </Col>
         </Row>
     );

@@ -25,7 +25,12 @@ const NoteFormModal = (props) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form onSubmit={(e) => props.submitHandler(e, {
+                <Form onSubmit={(e) => isEdit ? props.submitHandler(e, {
+                    id: props.data.id,
+                    heading: props.formState.inputs.heading.value,
+                    tags: props.formState.inputs.tags.value,
+                    body: props.formState.inputs.body.value
+                }) : props.submitHandler(e, {
                     heading: props.formState.inputs.heading.value,
                     tags: props.formState.inputs.tags.value,
                     body: props.formState.inputs.body.value

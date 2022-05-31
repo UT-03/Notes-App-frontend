@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import Notes from '../components/Notes';
 import { useHttpClient } from '../hooks/HttpHook';
 import { AuthContext } from '../util/authContext';
+import ErrorModal from '../components/ErrorModal';
 
 const Home = (props) => {
     const [notes, setNotes] = useState();
@@ -45,8 +46,30 @@ const Home = (props) => {
         setNotes(() => notes$);
     }
 
+    const noteEditedHandler = (data) => {
+        const notes$ = [...notes];
+        const editedNoteIndex = notes$.findIndex(note => note.id === data.id);
+        const editedNote = notes$[editedNoteIndex];
+
+        editedNote.heading = data.heading;
+        editedNote.tags = data.tags;
+        editedNote.body = data.body;
+
+        notes$[editedNoteIndex] = editedNote;
+
+        setNotes(() => notes$);
+    }
+
+    const deletedNoteHandler = data => {
+        console.log(data);
+        const notes$ = [...notes];
+
+        setNotes(() => notes$.filter(note => note.id !== data));
+    }
+
     return (
         <React.Fragment>
+            <ErrorModal error={error} show={!!error} onHide={clearError} />
             <Header
                 onNewNote={newNoteAddedHandler} />
             {isLoading && (
@@ -72,7 +95,9 @@ const Home = (props) => {
                 <Notes
                     error={error}
                     clearError={clearError}
-                    notes={notes} />
+                    notes={notes}
+                    onEditNote={noteEditedHandler}
+                    onDeleteNote={deletedNoteHandler} />
             )}
         </React.Fragment>
     );

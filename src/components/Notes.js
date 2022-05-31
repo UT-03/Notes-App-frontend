@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 
 import Note from './Note';
@@ -7,6 +7,8 @@ import NoteFormModal from './NoteFormModal';
 import WarningModal from './WarningModal';
 import NoteBodyModal from './NoteBodyModal';
 import ErrorModal from './ErrorModal';
+import { AuthContext } from '../util/authContext';
+import { useHttpClient } from '../hooks/HttpHook';
 
 const Notes = props => {
 
@@ -14,6 +16,10 @@ const Notes = props => {
     const [showWarningModal, setShowWarningModal] = useState(false);
     const [showNoteBodyModal, setShowNoteBodyModal] = useState(false);
     const [data, setData] = useState();
+
+    const auth = useContext(AuthContext);
+
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const [formState, inputHandler, setFormData] = useForm({
         heading: {
@@ -31,6 +37,7 @@ const Notes = props => {
     }, false);
 
     const editNoteModalHandler = (data) => {
+        console.log(data)
         setData(data);
         setFormData({
             heading: {
@@ -52,16 +59,52 @@ const Notes = props => {
 
     const editNoteHandler = async (event, data) => {
         event.preventDefault();
-        console.log(data);
+
+        return sendRequest(
+            `${process.env.REACT_APP_HOSTNAME}/api/notes/edit-note`,
+            'PATCH',
+            JSON.stringify({
+                id: data.id,
+                heading: data.heading,
+                tags: data.tags,
+                body: data.body
+            }),
+            {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + auth.token
+            }
+        )
+            .then(responseData => {
+                props.onEditNote(responseData.note);
+            })
+            .then(() => {
+                setShowModal(false);
+            });
     }
 
-    const deleteNoteWarningModalHandler = () => {
+    const deleteNoteWarningModalHandler = (data) => {
+        setData(data);
         setShowWarningModal(true);
     }
 
     const deleteNoteHandler = () => {
-        setShowWarningModal(false);
-        console.log("Note deleted");
+        return sendRequest(
+            `${process.env.REACT_APP_HOSTNAME}/api/notes/`,
+            'DELETE',
+            JSON.stringify({
+                id: data.id
+            }),
+            {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + auth.token
+            }
+        )
+            .then(() => {
+                props.onDeleteNote(data.id);
+            })
+            .then(() => {
+                setShowWarningModal(false);
+            });
     }
 
     const showNoteBodyHandler = (data) => {
@@ -71,7 +114,7 @@ const Notes = props => {
 
     return (
         <React.Fragment>
-            <ErrorModal error={props.error} onHide={props.clearError} show={!!props.error} />
+            <ErrorModal error={error} onHide={clearError} show={!!error} />
             <Container fluid="sm" className="mt-3">
                 {props.notes.map((note, index) => {
                     return <Note
@@ -91,6 +134,7 @@ const Notes = props => {
                 inputHandler={inputHandler}
                 data={data}
                 buttonLabel="Edit Note"
+                buttonDisable={isLoading}
             />
             <WarningModal
                 show={showWarningModal}
