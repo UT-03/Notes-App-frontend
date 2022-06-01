@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
 import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Image from 'react-bootstrap/Image';
 
 import Note from './Note';
 import { useForm } from '../hooks/FormHook';
@@ -9,6 +12,7 @@ import NoteBodyModal from './NoteBodyModal';
 import ErrorModal from './ErrorModal';
 import { AuthContext } from '../util/authContext';
 import { useHttpClient } from '../hooks/HttpHook';
+import noNoteIllustration from '../assets/images/noNoteIllustration.svg'
 
 const Notes = props => {
 
@@ -115,16 +119,29 @@ const Notes = props => {
     return (
         <React.Fragment>
             <ErrorModal error={error} onHide={clearError} show={!!error} />
-            <Container fluid="sm" className="mt-3">
-                {props.notes.map((note, index) => {
-                    return <Note
-                        note={note}
-                        key={index}
-                        onEditNoteClick={editNoteModalHandler}
-                        onDeleteNoteClick={deleteNoteWarningModalHandler}
-                        showNoteBodyHandler={showNoteBodyHandler} />
-                })}
-            </Container>
+            {props.notes.length !== 0 ?
+                <Container fluid="sm" className="mt-3">
+                    {props.notes.map((note, index) => {
+                        return <Note
+                            note={note}
+                            key={index}
+                            onEditNoteClick={editNoteModalHandler}
+                            onDeleteNoteClick={deleteNoteWarningModalHandler}
+                            showNoteBodyHandler={showNoteBodyHandler} />
+                    })}
+                </Container>
+                :
+                <React.Fragment>
+                    <Row>
+                        <Col><Image src={noNoteIllustration} style={{ width: "30vw" }} className="d-block m-auto" /></Col>
+                        <Col className="d-flex align-items-center">
+                            <div>
+                                <h3>None of the notes match your search query</h3>
+                            </div>
+                        </Col>
+                    </Row>
+                </React.Fragment>
+            }
             <NoteFormModal
                 show={showModal}
                 onHide={() => setShowModal(false)}
@@ -142,7 +159,8 @@ const Notes = props => {
                 heading="Delete Note?"
                 warningMessage="Are you sure you want to delete the note?"
                 warningAssentButtonLabel="Delete"
-                warningAssentHandler={deleteNoteHandler} />
+                warningAssentHandler={deleteNoteHandler}
+                buttonDisable={isLoading} />
 
             {showNoteBodyModal && data && (
                 <NoteBodyModal

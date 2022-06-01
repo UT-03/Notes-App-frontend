@@ -13,7 +13,9 @@ import { AuthContext } from '../util/authContext';
 import ErrorModal from '../components/ErrorModal';
 
 const Home = (props) => {
+    let searchQuery = '';
     const [notes, setNotes] = useState();
+    const [notesToBeDisplayed, setNotesToBeDisplayed] = useState();
 
     const auth = useContext(AuthContext);
 
@@ -40,6 +42,10 @@ const Home = (props) => {
         fetchNotes();
     }, [sendRequest]);
 
+    useEffect(() => {
+        searchTagsHandler(searchQuery);
+    }, [notes]);
+
     const newNoteAddedHandler = (data) => {
         const notes$ = [...notes];
         notes$.push(data.note);
@@ -61,17 +67,34 @@ const Home = (props) => {
     }
 
     const deletedNoteHandler = data => {
-        console.log(data);
         const notes$ = [...notes];
 
         setNotes(() => notes$.filter(note => note.id !== data));
+    }
+
+    const searchTagsHandler = (searchQuery$) => {
+        searchQuery = searchQuery$;
+        if (!notes)
+            return;
+
+        const notesToBeDisplayed$ = notes.filter(note => {
+            let isValid = false;
+            note.tags.forEach(tag => {
+                if (tag.toLowerCase().includes(`${searchQuery}`.toLowerCase())) {
+                    isValid = true;
+                }
+            });
+            return isValid;
+        })
+        setNotesToBeDisplayed(() => notesToBeDisplayed$);
     }
 
     return (
         <React.Fragment>
             <ErrorModal error={error} show={!!error} onHide={clearError} />
             <Header
-                onNewNote={newNoteAddedHandler} />
+                onNewNote={newNoteAddedHandler}
+                onTagsSearch={searchTagsHandler} />
             {isLoading && (
                 <Container>
                     <Spinner animation="border" variant="primary" size='lg' style={{ width: "100px", height: "100px" }} className="mt-5 d-block m-auto" />
@@ -91,11 +114,11 @@ const Home = (props) => {
                 </React.Fragment>
             )
             }
-            {!isLoading && notes && notes.length !== 0 && (
+            {!isLoading && notes && notesToBeDisplayed && notes.length !== 0 && (
                 <Notes
                     error={error}
                     clearError={clearError}
-                    notes={notes}
+                    notes={notesToBeDisplayed}
                     onEditNote={noteEditedHandler}
                     onDeleteNote={deletedNoteHandler} />
             )}

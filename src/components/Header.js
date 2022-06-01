@@ -67,17 +67,23 @@ const Header = props => {
     }
     return (
         <React.Fragment>
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="lg" className="mb-4">
                 <Container fluid>
                     <Navbar.Brand href="#">Notes App</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
-                        <Form className="d-flex ms-auto my-2">
+                        <Form
+                            className="d-flex ms-auto my-2"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                            }}
+                        >
                             <FormControl
                                 type="search"
                                 placeholder="Search tags"
                                 className="me-2"
                                 aria-label="Search"
+                                onChange={(e) => props.onTagsSearch(e.target.value)}
                             />
                         </Form>
                         <Button type='button' variant="primary" className="m-2" onClick={() => setShowModal(true)}>Add Note</Button>
