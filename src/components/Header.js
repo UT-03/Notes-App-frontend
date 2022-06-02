@@ -12,6 +12,7 @@ import { useAuth } from '../hooks/AuthHook';
 import { AuthContext } from '../util/authContext';
 import { useHttpClient } from '../hooks/HttpHook';
 import ErrorModal from './ErrorModal';
+import envVariables from '../environmentVariables';
 
 const Header = props => {
     const [showModal, setShowModal] = useState(false);
@@ -41,7 +42,7 @@ const Header = props => {
         event.preventDefault();
 
         return sendRequest(
-            `${process.env.REACT_APP_HOSTNAME}/api/notes/add-new-note`,
+            `${envVariables.hostname}/api/notes/add-new-note`,
             'POST',
             JSON.stringify({
                 heading: data.heading,

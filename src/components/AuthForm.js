@@ -33,7 +33,7 @@ const AuthForm = (props) => {
                 type="text"
                 label="Username"
                 validators={[VALIDATOR_REQUIRE()]}
-                errorText="Please enter a valid Username!"
+                errorText="This entry cannot be empty!"
                 onInput={inputHandler}
             />
             <Input
@@ -42,7 +42,8 @@ const AuthForm = (props) => {
                 type="password"
                 label="Password"
                 validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(6)]}
-                errorText="Password must be at least of 6 characters!"
+                extraText="Password must have at least 6 characters"
+                errorText="Please enter valid password!"
                 onInput={inputHandler}
             />
             <Button

@@ -11,6 +11,7 @@ import Notes from '../components/Notes';
 import { useHttpClient } from '../hooks/HttpHook';
 import { AuthContext } from '../util/authContext';
 import ErrorModal from '../components/ErrorModal';
+import envVariables from '../environmentVariables';
 
 const Home = (props) => {
     let searchQuery = '';
@@ -26,7 +27,7 @@ const Home = (props) => {
             let responseData;
             try {
                 responseData = await sendRequest(
-                    `${process.env.REACT_APP_HOSTNAME}/api/notes/`,
+                    `${envVariables.hostname}/api/notes/`,
                     'GET',
                     null,
                     {
@@ -107,7 +108,7 @@ const Home = (props) => {
                         <Col className="d-flex align-items-center">
                             <div>
                                 <h1>Your Notes will appear here</h1>
-                                <h3>Add Notes to see here...</h3>
+                                <h3>Add Notes to see...</h3>
                             </div>
                         </Col>
                     </Row>

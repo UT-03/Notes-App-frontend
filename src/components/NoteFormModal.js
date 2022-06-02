@@ -52,7 +52,8 @@ const NoteFormModal = (props) => {
                         type="text"
                         label="Tags"
                         validators={[VALIDATOR_REQUIRE()]}
-                        errorText="Please enter valid Tags!"
+                        extraText="Add multiple tags separated by commas (,)."
+                        errorText="This entry cannot be empty!"
                         onInput={props.inputHandler}
                         initialValue={isEdit ? props.data.tags : ''}
                         initialValid={isEdit ? true : false}
@@ -61,9 +62,9 @@ const NoteFormModal = (props) => {
                         id="body"
                         type="text"
                         label="Body"
-                        rows={10}
                         validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(10)]}
-                        errorText="Body must have minimum length of 10 characters!"
+                        extraText="Body must have at least 10 characters."
+                        errorText="Please abide by rules!"
                         onInput={props.inputHandler}
                         initialValue={isEdit ? props.data.body : ''}
                         initialValid={isEdit ? true : false}

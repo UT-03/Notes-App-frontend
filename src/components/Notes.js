@@ -13,6 +13,7 @@ import ErrorModal from './ErrorModal';
 import { AuthContext } from '../util/authContext';
 import { useHttpClient } from '../hooks/HttpHook';
 import noNoteIllustration from '../assets/images/noNoteIllustration.svg'
+import envVariables from '../environmentVariables';
 
 const Notes = props => {
 
@@ -65,7 +66,7 @@ const Notes = props => {
         event.preventDefault();
 
         return sendRequest(
-            `${process.env.REACT_APP_HOSTNAME}/api/notes/edit-note`,
+            `${envVariables.hostname}/api/notes/edit-note`,
             'PATCH',
             JSON.stringify({
                 id: data.id,
@@ -93,7 +94,7 @@ const Notes = props => {
 
     const deleteNoteHandler = () => {
         return sendRequest(
-            `${process.env.REACT_APP_HOSTNAME}/api/notes/`,
+            `${envVariables.hostname}/api/notes/`,
             'DELETE',
             JSON.stringify({
                 id: data.id

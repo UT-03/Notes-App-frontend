@@ -6,6 +6,7 @@ import { AuthContext } from '../util/authContext';
 import { useHttpClient } from '../hooks/HttpHook';
 import { useNavigate } from 'react-router-dom';
 import ErrorModal from '../components/ErrorModal';
+import envVariables from '../environmentVariables';
 
 const Auth = () => {
     const auth = useContext(AuthContext);
@@ -18,7 +19,7 @@ const Auth = () => {
         if (isLoginMode) {
             try {
                 responseData = await sendRequest(
-                    `${process.env.REACT_APP_HOSTNAME}/api/user/login`,
+                    `${envVariables.hostname}/api/user/login`,
                     'POST',
                     JSON.stringify({
                         username: data.username,
@@ -35,7 +36,7 @@ const Auth = () => {
         } else {
             try {
                 responseData = await sendRequest(
-                    `${process.env.REACT_APP_HOSTNAME}/api/user/signup`,
+                    `${envVariables.hostname}/api/user/signup`,
                     'POST',
                     JSON.stringify({
                         username: data.username,

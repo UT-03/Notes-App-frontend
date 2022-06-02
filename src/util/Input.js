@@ -64,8 +64,9 @@ const Input = props => {
                 onBlur={touchHandler}
                 value={inputState.value} />
             {!inputState.isValid && inputState.isTouched && (
-                <Form.Text className="text-danger">{props.errorText}</Form.Text>
+                <Form.Text className="text-danger d-block">{props.errorText}</Form.Text>
             )}
+            <Form.Text className="text-muted">{props.extraText}</Form.Text>
 
         </Form.Group>
     ) : (
@@ -73,6 +74,7 @@ const Input = props => {
             <Form.Label className={`${isInputInvalid && "text-danger"}`}>{props.label}</Form.Label>
             <Form.Control
                 className={`${isInputInvalid && "invalid border border-danger"}`}
+                as="textarea"
                 id={props.id}
                 rows={props.rows || 3}
                 type={props.type}
@@ -81,8 +83,9 @@ const Input = props => {
                 onBlur={touchHandler}
                 value={inputState.value} />
             {!inputState.isValid && inputState.isTouched && (
-                <Form.Text className="text-danger">{props.errorText}</Form.Text>
+                <Form.Text className="text-danger d-block">{props.errorText}</Form.Text>
             )}
+            <Form.Text className="text-muted">{props.extraText}</Form.Text>
         </Form.Group>
     );
     return (
